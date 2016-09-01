@@ -1,6 +1,6 @@
 package ru.rzn.myasoedov.ga.recview;
 
-import android.support.v7.widget.CardView;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +8,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.rzn.myasoedov.ga.recview.db.MessageContract;
 
 /**
  * Created by User on 25.08.2016.
  */
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
-    List<Person> persons;
-    RVAdapter(List<Person> persons){
-        this.persons = persons;
+    Cursor cursor;
+
+    public RVAdapter() {
+    }
+
+    public RVAdapter(Cursor cursor) {
+        this.cursor = cursor;
     }
 
     @Override
@@ -30,14 +33,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
 
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int i) {
-        holder.personName.setText(persons.get(i).name);
-        holder.personAge.setText(persons.get(i).age);
-        holder.personPhoto.setImageResource(persons.get(i).photoId);
+        if (cursor != null) {
+            cursor.moveToPosition(i);
+        }
+        String id = (cursor != null) ? String.valueOf(cursor
+                .getLong(cursor.getColumnIndex(MessageContract._ID))) : "";
+        String text = (cursor != null) ? cursor.getString(cursor
+                .getColumnIndex(MessageContract.TEXT)) : "";
+
+        holder.personName.setText(id);
+        holder.personAge.setText(cursor.getString(cursor.getColumnIndex(MessageContract.TEXT)));
+        holder.personPhoto.setImageResource(R.mipmap.ic_launcher);
+
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return cursor == null ? 0 : cursor.getCount();
     }
 
 

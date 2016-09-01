@@ -15,6 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".db.MessageContentProvider"
+            android:authorities="ru.rzn.myasoedov.ga.recview"
+            android:exported="false"/>
     </application>
 
 </manifest>
